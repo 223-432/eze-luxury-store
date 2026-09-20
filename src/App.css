@@ -1,0 +1,216 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #475569;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --accent-sale: #ef4444;
+  --accent-new: #10b981;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Style the header */
+header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 16px 32px;
+  align-items: center;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: white;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+header a {
+  color: var(--bg-color);
+  display: flex;
+  align-items: center;
+}
+
+#headerHomeIcon {
+  display: flex;
+  align-items: center;
+}
+
+#headerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#headerCartIcon {
+  display: flex;
+  align-items: center;
+}
+
+#search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+#search label {
+  display: none;
+}
+
+#search input {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.95rem;
+  transition: var(--transition, all 0.25s ease);
+  margin: 0;
+}
+
+#search input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#search input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-color, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Container for flexboxes */
+section {
+  display: -webkit-flex;
+  display: flex;
+  min-height: calc(100vh - 140px);
+}
+
+/* Style the navigation menu */
+nav {
+  -webkit-flex: 0 0 260px;
+  -ms-flex: 0 0 260px;
+  flex: 0 0 260px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 32px 24px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+nav ul li {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--secondary-color);
+  transition: var(--transition);
+  margin-bottom: 4px;
+}
+
+nav ul li:hover {
+  color: var(--primary-color);
+  background-color: var(--bg-color);
+}
+
+main {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 32px;
+  background-color: var(--bg-color);
+}
+
+article {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+article:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Style the footer */
+footer {
+  background-color: #0f172a;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  border-top: 1px solid var(--border-color);
+}
+
+footer a {
+  color: var(--bg-color)
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    section {
+        -webkit-flex-direction: column;
+        flex-direction: column;
+    }
+    nav {
+        -webkit-flex: none;
+        -ms-flex: none;
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 20px;
+    }
+    nav ul {
+        display: -webkit-flex;
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+    }
+    nav ul li {
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+    article {
+        grid-template-columns: 1fr;
+    }
+}
