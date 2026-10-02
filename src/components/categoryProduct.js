@@ -18,7 +18,11 @@ const CategoryProduct = ({
     stock
     }) => {
     const navigate = useNavigate();
-    const { addProduct } = useContext(CartContext);
+    const { addProduct, cartItems } = useContext(CartContext);
+
+    const cartItem = cartItems.find(item => item.id === id);
+    const currentQty = cartItem ? (cartItem.quantity || 1) : 0;
+    const isOutOfStock = stock !== undefined && currentQty >= stock;
 
   return (
     <StyledArticle>
@@ -67,7 +71,13 @@ const CategoryProduct = ({
 
             <StyledAction>
                 <StyledButton onClick={() => navigate(`products/${id}`)}>View Products</StyledButton>
-                <StyledSecondaryButton onClick={() => addProduct({id, name, price})}>Add to Basket</StyledSecondaryButton>
+                <StyledSecondaryButton 
+                    onClick={() => addProduct({id, name, price, stock})}
+                    disabled={isOutOfStock}
+                    style={isOutOfStock ? { opacity: 0.6, cursor: 'not-allowed', backgroundColor: '#f1f5f9' } : {}}
+                >
+                    {isOutOfStock ? 'Stock Limit Reached' : 'Add to Basket'}
+                </StyledSecondaryButton>
             </StyledAction>
         </StyledFinanceAside>
     </StyledArticle>

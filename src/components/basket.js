@@ -26,18 +26,25 @@ const Basket = () => {
             </BasketHeader>
             <BasketHeaderLine />
 
-            {cartItems.map((item) => (
+            {cartItems.map((item) => {
+              const isMaxStock = item.stock !== undefined && item.quantity >= item.stock;
+              return (
               <CartItemRow key={item.id}>
-                <ItemName>{item.name}</ItemName>
+                <ItemName>{item.name} {item.stock !== undefined && <small style={{color: '#64748b'}}>({item.stock} left)</small>}</ItemName>
                 <QuantityControl>
                   <QtyButton onClick={() => decreaseQuantity(item)}>-</QtyButton>
                   <span>{item.quantity}</span>
-                  <QtyButton onClick={() => increaseQuantity(item)}>+</QtyButton>
+                  <QtyButton 
+                    onClick={() => increaseQuantity(item)}
+                    disabled={isMaxStock}
+                    style={isMaxStock ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                    title={isMaxStock ? 'Stock limit reached' : ''}
+                  >+</QtyButton>
                 </QuantityControl>
                 <ItemPrice>£{item.price * item.quantity}</ItemPrice>
                 <RemoveButton onClick={() => removeProduct(item)}>Remove</RemoveButton>
               </CartItemRow>
-            ))}
+            )})}
           </BasketTable>
 
           <BasketHeaderLine />

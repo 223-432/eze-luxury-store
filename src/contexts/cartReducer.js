@@ -20,6 +20,7 @@ export const CartReducer = (state, action) => {
                 const currentQty = updatedItems[index].quantity || 1;
                 updatedItems[index] = {
                     ...updatedItems[index],
+                    ...action.payload,
                     quantity: currentQty + 1
                 };
                 newState = {

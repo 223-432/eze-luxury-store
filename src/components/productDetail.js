@@ -11,7 +11,7 @@ const ProductDetail = () => {
     const [product, setProduct]  = useState({errorMessage: '', data: {} });
     const {productId} = useParams();
     const cartContext = useContext(CartContext);
-    const { addProduct } = cartContext;
+    const { addProduct, cartItems } = cartContext;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,6 +20,10 @@ const ProductDetail = () => {
         }
         fetchData()
     }, [productId]);
+
+    const cartItem = cartItems.find(item => item.id === product.data.id);
+    const currentQty = cartItem ? (cartItem.quantity || 1) : 0;
+    const isOutOfStock = product.data.stock !== undefined && currentQty >= product.data.stock;
 
   return (
         <StyledArticle>
@@ -67,7 +71,13 @@ const ProductDetail = () => {
             </StyledStock>
 
             <StyledAction>
-                <StyledButton onClick={() => addProduct({id: product.data.id, name: product.data.name, price: product.data.price})}>Add to Basket</StyledButton>
+                <StyledButton 
+                    onClick={() => addProduct({id: product.data.id, name: product.data.name, price: product.data.price, stock: product.data.stock})}
+                    disabled={isOutOfStock}
+                    style={isOutOfStock ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+                >
+                    {isOutOfStock ? 'Stock Limit Reached' : 'Add to Basket'}
+                </StyledButton>
             </StyledAction>
         </StyledFinanceAside>
 
