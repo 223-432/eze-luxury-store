@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { CartContext } from '../contexts/cartContext';
 
 const Layout = ({ categories }) => {
-  const { cartItems, notification } = useContext(CartContext);
+  const { cartItems, notification, clearNotification } = useContext(CartContext);
   const totalItemsCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
       const renderCategories = () => {
@@ -58,7 +58,8 @@ const Layout = ({ categories }) => {
     
         {notification && (
           <Toast type={notification.type}>
-            {notification.message}
+            <span>{notification.message}</span>
+            <ToastCloseButton onClick={clearNotification}>&times;</ToastCloseButton>
           </Toast>
         )}
         </>
@@ -97,6 +98,9 @@ const Toast = styled.div`
   font-weight: 600;
   font-size: 0.95rem;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   animation: slideIn 0.3s ease-out;
 
   @keyframes slideIn {
@@ -108,5 +112,20 @@ const Toast = styled.div`
       transform: translateY(0);
       opacity: 1;
     }
+  }
+`;
+
+const ToastCloseButton = styled.button`
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
   }
 `;

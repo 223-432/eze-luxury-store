@@ -10,6 +10,7 @@ import { CartContext } from "../contexts/cartContext"
 
 const CategoryProduct = ({
     id, 
+    categoryId,
     name, 
     image, 
     specs, 
@@ -27,7 +28,7 @@ const CategoryProduct = ({
   return (
     <StyledArticle>
         <StyledTitle>
-            <StyledLink to={`products/${id}`}>{name}</StyledLink>
+            <StyledLink to={`/categories/${categoryId}/products/${id}`}>{name}</StyledLink>
         </StyledTitle>
 
         <StyledFigure>
@@ -70,7 +71,7 @@ const CategoryProduct = ({
             </StyledStock>
 
             <StyledAction>
-                <StyledButton onClick={() => navigate(`products/${id}`)}>View Products</StyledButton>
+                <StyledButton onClick={() => navigate(`/categories/${categoryId}/products/${id}`)}>View Products</StyledButton>
                 <StyledSecondaryButton 
                     onClick={() => addProduct({id, name, price, stock})}
                     disabled={isOutOfStock}

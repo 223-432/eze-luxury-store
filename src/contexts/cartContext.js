@@ -16,14 +16,9 @@ const CartContextProvider = ({children}) => {
         sessionStorage.setItem('cartItems', JSON.stringify(state.cartItems));
     }, [state.cartItems]);
 
-    useEffect(() => {
-        if (notification) {
-            const timer = setTimeout(() => {
-                setNotification(null);
-            }, 3500);
-            return () => clearTimeout(timer);
-        }
-    }, [notification]);
+    const clearNotification = () => {
+        setNotification(null);
+    }
 
     const addProduct = payLoad => {
         const existingItem = state.cartItems.find(x => x.id === payLoad.id);
@@ -88,6 +83,7 @@ const CartContextProvider = ({children}) => {
         getItems,
         notification,
         setNotification,
+        clearNotification,
         ...state
     }
 
