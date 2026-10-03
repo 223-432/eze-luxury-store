@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from 'react';
-
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Search = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const submitSearch = event => {
+    event.preventDefault();
+    const term = query.trim();
+    if (term) navigate(`/search?s=${encodeURIComponent(term)}`);
+  };
 
-    useEffect(() => {
-        const delay = setTimeout(() => {
-            if (searchTerm) {
-            navigate('/search?s=' + searchTerm);
-            }
-        }, 300);
+  return (
+    <form className="search-form" role="search" onSubmit={submitSearch}>
+      <label className="sr-only" htmlFor="site-search">Search the collection</label>
+      <input id="site-search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search the collection" />
+      <button type="submit" aria-label="Search">⌕</button>
+    </form>
+  );
+};
 
-        return () => clearTimeout(delay);
-
-    }, [searchTerm, navigate])
-
-    const handleChange = ev => {
-        setSearchTerm(ev.target.value);
-    }
-
-    return (
-        <div id="search">
-            <label>Search</label>
-            <input type="text" name="search" onChange={handleChange} placeholder="Search products..." />
-        </div>
-    )
-} 
-
-export default Search
+export default Search;

@@ -12,7 +12,7 @@ export const CartReducer = (state, action) => {
             if (index === -1) {
                 newState = {
                     ...state,
-                    cartItems: [...state.cartItems, { ...action.payload, quantity: 1 }]
+                    cartItems: [...state.cartItems, { ...action.payload, quantity: action.amount || 1 }]
                 };
                 break;
             } else {
@@ -21,7 +21,7 @@ export const CartReducer = (state, action) => {
                 updatedItems[index] = {
                     ...updatedItems[index],
                     ...action.payload,
-                    quantity: currentQty + 1
+                    quantity: currentQty + (action.amount || 1)
                 };
                 newState = {
                     ...state,
@@ -71,10 +71,7 @@ export const CartReducer = (state, action) => {
                         cartItems: updatedItems
                     };
                 } else {
-                    newState = {
-                        ...state,
-                        cartItems: state.cartItems.filter(x => x.id !== action.payload.id)
-                    };
+                    return state;
                 }
                 break;
             }
@@ -91,9 +88,9 @@ export const CartReducer = (state, action) => {
             return state;
     }
 
-    // Persist updated cart state to sessionStorage for tab isolation
+    // Persist updated cart state across browser sessions.
     if (newState && typeof window !== 'undefined') {
-        sessionStorage.setItem('cartItems', JSON.stringify(newState.cartItems));
+        localStorage.setItem('cartItems', JSON.stringify(newState.cartItems));
     }
 
     return newState;
