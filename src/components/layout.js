@@ -1,131 +1,52 @@
-import React, { useContext } from 'react'
-
-import { Link, Outlet } from 'react-router-dom'
-
-import { HomeIcon,CartIcon } from './icons'
-
-import Search from "./search";
-import styled from 'styled-components';
+import React, { useContext, useState } from 'react';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { CartContext } from '../contexts/cartContext';
+import { useStore } from '../contexts/storeContext';
+import Search from './search';
 
-const Layout = ({ categories }) => {
+const Layout = () => {
   const { cartItems, notification, clearNotification } = useContext(CartContext);
-  const totalItemsCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+  const { user, wishlist, toast, dismissToast, categories } = useStore();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
 
-      const renderCategories = () => {
-    return categories.data.map(c => 
-      <li key={c.id}><Link to={`/categories/${c.id}`}>{c.name}</Link></li>
-    )
-  }
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-        <>
-        <header>
-          <div id="headerHomeIcon">
-            <Link to='/'><HomeIcon width={20} /></Link>
-          </div>
+    <div className="site-shell">
+      <div className="announcement">Complimentary insured delivery on every order</div>
+      <header className="site-header">
+        <Link className="brand" to="/" onClick={closeMenu}><span>EZE</span><small>.B</small></Link>
+        <button className="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(open => !open)}>☰</button>
+        <nav className={`primary-nav${menuOpen ? ' is-open' : ''}`} aria-label="Main navigation">
+          <NavLink to="/" onClick={closeMenu}>Home</NavLink>
+          {(categories.length ? categories : [{ id: 0, name: 'Cars' }, { id: 1, name: 'Watches' }, { id: 2, name: 'Fragrance' }]).map(category =>
+            <NavLink key={category.id} to={`/categories/${category.id}`} onClick={closeMenu}>{category.name}</NavLink>
+          )}
+          <NavLink to="/products" onClick={closeMenu}>Collection</NavLink>
+        </nav>
+        <div className="header-actions">
+          <Search />
+          <Link className="icon-link" to="/wishlist" aria-label={`Wishlist, ${wishlist.length} items`}>♡<span className="count">{wishlist.length}</span></Link>
+          <Link className="icon-link" to={user ? '/profile' : '/login'} aria-label="Account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg></Link>
+          <Link className="icon-link" to="/basket" aria-label={`Cart, ${cartCount} items`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.3 11.2a2 2 0 0 0 2 1.6h8.9a2 2 0 0 0 2-1.6L22 8H6" /><circle cx="10" cy="21" r="1" /><circle cx="18" cy="21" r="1" /></svg><span className="count">{cartCount}</span></Link>
+        </div>
+      </header>
+      <main className="page-content"><Outlet /></main>
+      <footer className="site-footer">
+        <Link className="brand footer-brand" to="/">EZE<small>.B</small></Link>
+        <span>Luxury, considered.</span>
+        <div><Link to="/products">Shop the collection</Link><Link to="/profile">Your account</Link><Link to="/admin">Admin</Link></div>
+        <small>© {new Date().getFullYear()} EZE.B. All rights reserved.</small>
+      </footer>
+      {(toast || notification) && (
+        <div className={`toast ${(toast || notification).type || 'success'}`} role="status">
+          <span>{(toast || notification).message}</span>
+          <button type="button" aria-label="Dismiss notification" onClick={toast ? dismissToast : clearNotification}>×</button>
+        </div>
+      )}
+    </div>
+  );
+};
 
-            <Search />
-
-          <div id="headerTitle">
-            Chi Mart
-          </div>
-
-          <div id="headerCartIcon" style={{ position: 'relative' }}>
-            <Link to='/basket'>
-              <CartIcon width={20} />
-              {totalItemsCount > 0 && (
-                <CartBadge>{totalItemsCount}</CartBadge>
-              )}
-            </Link>
-          </div>
-        </header>
-    
-        <section>
-          <nav>
-          { categories.errorMessage && <div>Error: {categories.errorMessage}</div> }
-    
-          <ul>
-            { categories.data && renderCategories() }
-          </ul>
-          </nav>
-          <main>
-            <Outlet />
-          </main>
-        </section>
-    
-        <footer><Link to="/">Home</Link> | <Link to="/basket">Basket</Link></footer>
-    
-        {notification && (
-          <Toast type={notification.type}>
-            <span>{notification.message}</span>
-            <ToastCloseButton onClick={clearNotification}>&times;</ToastCloseButton>
-          </Toast>
-        )}
-        </>
-  )
-}
-
-export default Layout
-
-const CartBadge = styled.span`
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #ef4444;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const Toast = styled.div`
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background-color: ${props => props.type === 'warning' ? '#f59e0b' : '#10b981'};
-  color: white;
-  padding: 12px 20px;
-  border-radius: var(--radius-md, 8px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  font-weight: 600;
-  font-size: 0.95rem;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: slideIn 0.3s ease-out;
-
-  @keyframes slideIn {
-    from {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-`;
-
-const ToastCloseButton = styled.button`
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  opacity: 0.8;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
+export default Layout;

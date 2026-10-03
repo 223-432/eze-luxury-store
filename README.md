@@ -14,6 +14,19 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
+## EZE.B storefront demo
+
+The storefront keeps the existing `public/db.json` catalog and product images. Demo accounts, the signed-in session, basket, wishlist, orders, reviews, newsletter sign-ups, promotion code, and admin product edits are stored in the current browser's local storage.
+
+Create a customer account through **Register**, or use the demo administrator account:
+
+- Email: `admin@eze.com`
+- Password: `Admin123!`
+
+Enter `EZE10` in the basket to apply the demonstration 10% discount. Checkout collects sample card fields for the interface only; card details are not saved or submitted, and no payment is processed.
+
+Authentication and admin access are frontend demonstrations, not production security. Password hashes and all other demo data remain on the browser, and the hard-coded admin credentials can be inspected in client code. A production store must use a trusted server for identity, authorization, inventory, order storage, and payment processing.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
